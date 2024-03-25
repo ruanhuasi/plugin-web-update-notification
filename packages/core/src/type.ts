@@ -92,6 +92,16 @@ export interface Options {
    * !!! Don't forget / at the end of the path
   */
   injectFileBase?: string
+
+  /**
+   * check ModuleFederation main application version
+   */
+  moduleFederationList?: ModuleFederationApplication[]
+}
+
+export interface ModuleFederationApplication {
+  fileBase: string
+  name: string
 }
 
 export type VersionType = 'git_commit_hash' | 'svn_revision_number' | 'pkg_version' | 'build_timestamp' | 'custom'

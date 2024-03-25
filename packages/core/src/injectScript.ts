@@ -1,4 +1,4 @@
-import type { LocaleData, Options, VersionJSON } from './type'
+import type { LocaleData, ModuleFederationApplication, Options } from './type'
 import {
   CUSTOM_UPDATE_EVENT_NAME,
   DIRECTORY_NAME,
@@ -25,7 +25,7 @@ let intervalTimer: NodeJS.Timer | undefined
  */
 function limit(fn: Function, delay: number) {
   let pending = false
-  return function (this: any, ...args: any[]) {
+  return function (this: any, ...args: any[]): any {
     if (pending)
       return
     pending = true
@@ -65,6 +65,38 @@ window.pluginWebUpdateNotice_ = {
 }
 
 /**
+ * Load Version Information
+ */
+const fetchVersions = (base: string) => {
+  return window
+    .fetch(`${base}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${Date.now()}`)
+    .then((response) => {
+      if (!response.ok)
+        throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json from ${base}`)
+      return response.json()
+    })
+    .catch((err) => {
+      Promise.reject(err)
+    })
+}
+
+// Save Module Federated Project Version Number
+const setModuleFederationVersions = (moduleFederationList: Array<ModuleFederationApplication>) => {
+  const checkFederationsSequentially = (currentIndex = 0) => {
+    if (currentIndex < moduleFederationList.length) {
+      const module = moduleFederationList[currentIndex]
+      fetchVersions(module.fileBase)
+        .then(({ version }) => {
+          window[module.name as any] = version
+        }).finally(() => {
+          checkFederationsSequentially(currentIndex + 1)
+        })
+    }
+  }
+  checkFederationsSequentially()
+}
+
+/**
  * It checks whether the system has been updated and if so, it shows a notification.
  * @param {Options} options - Options
  */
@@ -76,38 +108,51 @@ function __checkUpdateSetup__(options: Options) {
     checkOnWindowFocus = true,
     checkImmediately = true,
     checkOnLoadFileError = true,
+    moduleFederationList = [],
   } = options
-  const checkSystemUpdate = () => {
-    window
-      .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${Date.now()}`)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
 
-        return response.json()
-      })
-      .then(({ version: versionFromServer, silence }: VersionJSON) => {
-        if (silence)
-          return
-        latestVersion = versionFromServer
-        if (window.pluginWebUpdateNotice_version !== versionFromServer) {
-          // dispatch custom event
-          document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
-            detail: {
-              options,
-              version: versionFromServer,
-            },
-            bubbles: true,
-          }))
+  if (moduleFederationList.length)
+    setModuleFederationVersions(moduleFederationList)
 
-          const dismiss = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
-          if (!hasShowSystemUpdateNotice && !hiddenDefaultNotification && !dismiss)
-            showNotification(options)
-        }
-      })
+  const checkSystemUpdate = (base = injectFileBase, moduleFederationName = '') => {
+    return fetchVersions(base).then(({ version: versionFromServer, silence }) => {
+      if (silence)
+        return
+      latestVersion = versionFromServer
+      if (window[(moduleFederationName || 'pluginWebUpdateNotice_version') as any] !== versionFromServer) {
+        // dispatch custom event
+        document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
+          detail: {
+            options,
+            moduleFederationName,
+            version: versionFromServer,
+          },
+          bubbles: true,
+        }))
+
+        const dismiss = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
+        if (!hasShowSystemUpdateNotice && !hiddenDefaultNotification && !dismiss)
+          showNotification(options)
+      }
+      else {
+        Promise.reject(new Error('没有新版本'))
+      }
+    })
       .catch((err) => {
         console.error('[pluginWebUpdateNotice] Failed to check system update', err)
+        Promise.reject(new Error('版本检测失败'))
       })
+  }
+
+  const checkFederationsSequentially = (currentIndex = 0) => {
+    if (currentIndex < moduleFederationList.length) {
+      const module = moduleFederationList[currentIndex]
+      checkSystemUpdate(module.fileBase, module.name)
+        .catch(() => {
+          // If the update check failed, proceed to the next federation URL
+          checkFederationsSequentially(currentIndex + 1)
+        })
+    }
   }
 
   if (checkImmediately) {
@@ -151,8 +196,11 @@ function __checkUpdateSetup__(options: Options) {
       'error',
       (err) => {
         const errTagName = (err?.target as any)?.tagName
-        if (errTagName === 'SCRIPT')
-          checkSystemUpdate()
+        if (errTagName === 'SCRIPT') {
+          limitCheckSystemUpdate().catch(() => {
+            checkFederationsSequentially()
+          })
+        }
       },
       true,
     )
