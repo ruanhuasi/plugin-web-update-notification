@@ -6,9 +6,9 @@ import {
   INJECT_SCRIPT_FILE_NAME,
   JSON_FILE_NAME,
   NOTIFICATION_DISMISS_BTN_CLASS_NAME,
-} from "@plugin-web-update-notification/core";
+} from "@plugin-ofs-web-update-notification/core";
 
-test.describe("test @plugin-web-update-notification/vite", () => {
+test.describe("test @plugin-ofs-web-update-notification/vite", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
   });

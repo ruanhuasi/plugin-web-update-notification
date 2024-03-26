@@ -87,7 +87,7 @@ const setModuleFederationVersions = (moduleFederationList: Array<ModuleFederatio
       const module = moduleFederationList[currentIndex]
       fetchVersions(module.fileBase)
         .then(({ version }) => {
-          window[module.name as any] = version
+          window[`${module.name}_pluginWebUpdateNotice_version` as any] = version
         }).finally(() => {
           checkFederationsSequentially(currentIndex + 1)
         })
@@ -119,7 +119,8 @@ function __checkUpdateSetup__(options: Options) {
       if (silence)
         return
       latestVersion = versionFromServer
-      if (window[(moduleFederationName || 'pluginWebUpdateNotice_version') as any] !== versionFromServer) {
+      const moduleFederationNameVersions = moduleFederationName ? `${moduleFederationName}_pluginWebUpdateNotice_version` : ''
+      if (window[(moduleFederationNameVersions || 'pluginWebUpdateNotice_version') as any] !== versionFromServer) {
         // dispatch custom event
         document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
           detail: {

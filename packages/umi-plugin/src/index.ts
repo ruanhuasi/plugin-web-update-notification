@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import type { IApi } from 'umi'
-import type { Options } from '@plugin-web-update-notification/core'
+import type { Options } from '@plugin-ofs-web-update-notification/core'
 import {
   DIRECTORY_NAME,
   INJECT_SCRIPT_FILE_NAME,
@@ -12,10 +12,10 @@ import {
   generateJsFileContent,
   getFileHash,
   getVersion,
-} from '@plugin-web-update-notification/core'
+} from '@plugin-ofs-web-update-notification/core'
 import { name as pkgName } from '../package.json'
 
-export type { Options } from '@plugin-web-update-notification/core'
+export type { Options } from '@plugin-ofs-web-update-notification/core'
 
 const injectVersionTpl = (version: string) => {
   return `window.pluginWebUpdateNotice_version = '${version}';`

@@ -1,4 +1,4 @@
-const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/webpack')
+const { WebUpdateNotificationPlugin } = require('@plugin-ofs-web-update-notification/webpack')
 const { defineConfig } = require('@vue/cli-service')
 
 module.exports = defineConfig({

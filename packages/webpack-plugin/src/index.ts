@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { accessSync, constants, readFileSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
-import type { Options } from '@plugin-web-update-notification/core'
+import type { Options } from '@plugin-ofs-web-update-notification/core'
 import {
   DIRECTORY_NAME,
   INJECT_SCRIPT_FILE_NAME,
@@ -13,7 +13,7 @@ import {
   getFileHash,
   getVersion,
   get__Dirname,
-} from '@plugin-web-update-notification/core'
+} from '@plugin-ofs-web-update-notification/core'
 import type { Compilation, Compiler } from 'webpack'
 
 const pluginName = 'WebUpdateNotificationPlugin'
