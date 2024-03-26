@@ -1,7 +1,7 @@
 {
   "name": "@plugin-ofs-web-update-notification/vite",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Vite plugin for detect web page updates and notify.",
   "author": "Utopia",
   "license": "MIT",
@@ -17,8 +17,8 @@
   "keywords": [
     "vite",
     "vite-plugin",
-    "@plugin-web-update-notification/vite",
-    "web-update-notification"
+    "@plugin-ofs-web-update-notification/vite",
+    "ofs-web-update-notification"
   ],
   "sideEffects": false,
   "exports": {
@@ -43,7 +43,7 @@
     "vite": "^5.0.0 || >4.0.0 || ^3.0.0"
   },
   "dependencies": {
-    "@plugin-web-update-notification/core": "workspace:*"
+    "@plugin-ofs-web-update-notification/core": "workspace:*"
   },
   "devDependencies": {
     "vite": "^5.0.2"
