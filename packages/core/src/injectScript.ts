@@ -81,19 +81,16 @@ const fetchVersions = (base: string) => {
 }
 
 // Save Module Federated Project Version Number
-const setModuleFederationVersions = (moduleFederationList: Array<ModuleFederationApplication>) => {
-  const checkFederationsSequentially = (currentIndex = 0) => {
-    if (currentIndex < moduleFederationList.length) {
-      const module = moduleFederationList[currentIndex]
-      fetchVersions(module.fileBase)
-        .then(({ version }) => {
-          window[`${module.name}_pluginWebUpdateNotice_version` as any] = version
-        }).finally(() => {
-          checkFederationsSequentially(currentIndex + 1)
-        })
+const setModuleFederationVersions = async (moduleFederationList: Array<ModuleFederationApplication>) => {
+  for (const module of moduleFederationList) {
+    try {
+      const { version } = await fetchVersions(module.fileBase)
+      window[`${module.name}_pluginWebUpdateNotice_version` as any] = version
+    }
+    catch (error) {
+      continue
     }
   }
-  checkFederationsSequentially()
 }
 
 /**
@@ -134,25 +131,23 @@ function __checkUpdateSetup__(options: Options) {
         const dismiss = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
         if (!hasShowSystemUpdateNotice && !hiddenDefaultNotification && !dismiss)
           showNotification(options)
+
+        return true
       }
-      else {
-        Promise.reject(new Error('没有新版本'))
-      }
+
+      return false
     })
       .catch((err) => {
-        console.error('[pluginWebUpdateNotice] Failed to check system update', err)
-        Promise.reject(new Error('版本检测失败'))
+        console.error(`[${moduleFederationName || 'pluginWebUpdateNotice'}] Failed to check system update`, err)
+        return false
       })
   }
 
-  const checkFederationsSequentially = (currentIndex = 0) => {
-    if (currentIndex < moduleFederationList.length) {
-      const module = moduleFederationList[currentIndex]
-      checkSystemUpdate(module.fileBase, module.name)
-        .catch(() => {
-          // If the update check failed, proceed to the next federation URL
-          checkFederationsSequentially(currentIndex + 1)
-        })
+  const checkFederationsSequentially = async () => {
+    for (const module of moduleFederationList) {
+      const res = await checkSystemUpdate(module.fileBase, module.name)
+      if (res)
+        break
     }
   }
 

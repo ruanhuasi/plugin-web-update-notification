@@ -13,6 +13,7 @@ export default defineConfig((options) => { // The options here is derived from C
     dts: true,
     format: ['esm', 'cjs'],
     minify: !options.watch,
-    onSuccess: 'cp -a public/. dist',
+    // onSuccess: 'cp -a public/. dist',
+    onSuccess: 'xcopy public dist /E /I /Y',
   }
 })
