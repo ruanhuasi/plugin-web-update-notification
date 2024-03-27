@@ -10,7 +10,8 @@ export default defineConfig({
     vue(),
     webUpdateNotice({
       logVersion: true,
-      checkInterval: 0.5 * 60 * 1000,
+      versionType: "build_timestamp",
+      // checkInterval: 0.5 * 60 * 1000,
       notificationProps: {
         title: "📢  system update",
         description: "System update, please refresh the page",

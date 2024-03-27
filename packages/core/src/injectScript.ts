@@ -116,8 +116,9 @@ function __checkUpdateSetup__(options: Options) {
       if (silence)
         return
       latestVersion = versionFromServer
-      const moduleFederationNameVersions = moduleFederationName ? `${moduleFederationName}_pluginWebUpdateNotice_version` : ''
-      if (window[(moduleFederationNameVersions || 'pluginWebUpdateNotice_version') as any] !== versionFromServer) {
+      const versionName = moduleFederationName ? `${moduleFederationName}_pluginWebUpdateNotice_version` : 'pluginWebUpdateNotice_version'
+
+      if (window[versionName as any] !== versionFromServer) {
         // dispatch custom event
         document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
           detail: {

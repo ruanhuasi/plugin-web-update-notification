@@ -3,7 +3,8 @@ import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "@/components/HelloWorld.vue";
 
 const handleCheck = () => {
-  window.pluginWebUpdateNotice_.checkUpdate();
+  console.log(window.pluginWebUpdateNotice_);
+  // window.pluginWebUpdateNotice_.checkUpdate();
 };
 // type a = GlobalEventHandlersEventMap
 window.addEventListener("plugin_web_update_notice", (e) => {
@@ -26,7 +27,7 @@ window.addEventListener("plugin_web_update_notice", (e) => {
       <HelloWorld msg="You did it!" />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/">Home1</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
