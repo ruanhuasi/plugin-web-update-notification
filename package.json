@@ -1,7 +1,7 @@
 {
   "name": "plugin-ofs-web-update-notification",
   "type": "module",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "packageManager": "pnpm@7.2.1",
   "description": "Detect web page updates and notify",
   "author": "Utopia",
