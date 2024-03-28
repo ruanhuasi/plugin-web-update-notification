@@ -191,12 +191,11 @@ function __checkUpdateSetup__(options: Options) {
     // listener script resource loading error
     window.addEventListener(
       'error',
-      (err) => {
+      async (err) => {
         const errTagName = (err?.target as any)?.tagName
         if (errTagName === 'SCRIPT') {
-          limitCheckSystemUpdate().catch(() => {
+          if (!(await limitCheckSystemUpdate()))
             checkFederationsSequentially()
-          })
         }
       },
       true,
