@@ -118,6 +118,8 @@ function __checkUpdateSetup__(options: Options) {
       latestVersion = versionFromServer
       const versionName = moduleFederationName ? `${moduleFederationName}_pluginWebUpdateNotice_version` : 'pluginWebUpdateNotice_version'
 
+      console.log(`🚀 ~ returnfetchVersions ~ ${window[versionName as any]}:`, window[versionName as any])
+      console.log('🚀 ~ returnfetchVersions ~ versionFromServer:', versionFromServer)
       if (window[versionName as any] !== versionFromServer) {
         // dispatch custom event
         document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
