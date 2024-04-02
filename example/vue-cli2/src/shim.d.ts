@@ -1,0 +1,1 @@
+/// <reference types="@plugin-ofs-web-update-notification/webpack" />

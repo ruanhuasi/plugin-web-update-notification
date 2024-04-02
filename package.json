@@ -47,6 +47,7 @@
     "example:svelte-vite": "pnpm --filter svelte-vite-example preview",
     "example:react-umi": "pnpm --filter react-umi-example preview",
     "example:vue-webpack": "pnpm --filter vue-cli preview",
+    "example:vue-webpack2": "pnpm --filter vue-cli-remote preview",
     "lint": "eslint .",
     "synchronous-doc": "tsx scripts/copyFile.ts",
     "prepublishOnly": "nr build",
