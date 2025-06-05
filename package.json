@@ -1,7 +1,7 @@
 {
   "name": "plugin-ofs-web-update-notification",
   "type": "module",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "packageManager": "pnpm@7.2.1",
   "description": "Detect web page updates and notify",
   "author": "Utopia",
@@ -52,7 +52,7 @@
     "synchronous-doc": "tsx scripts/copyFile.ts",
     "prepublishOnly": "nr build",
     "release": "bumpp package.json packages/**/package.json",
-    "publish": "pnpm --filter=./packages/** publish --access public --no-git-checks --registry=http://172.16.24.171:8082/repository/vue_group/",
+    "publish": "pnpm --filter=./packages/** publish --access public --no-git-checks --registry=http://172.16.24.171:8082/repository/vue_owner/",
     "test:e2e": "pnpm --filter vue-vite-example test:e2e",
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit"
