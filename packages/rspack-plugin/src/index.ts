@@ -16,7 +16,7 @@ import {
 } from '@plugin-ofs-web-update-notification/core'
 import type { Compilation, Compiler } from '@rspack/core'
 
-const PLUGIN_NAME = 'RspackUpdateNotificationPlugin'
+const PLUGIN_NAME = 'WebUpdateNotificationPlugin'
 
 type PluginOptions = Options & {
   /** index.html file path, by default, we will look up path.resolve(webpackOutputPath, './index.html') */
@@ -66,7 +66,7 @@ function injectPluginHtml(
   return html
 }
 
-class RspackUpdateNotificationPlugin {
+class WebUpdateNotificationPlugin {
   options: PluginOptions
   constructor(options: PluginOptions) {
     this.options = options || {}
@@ -86,9 +86,6 @@ class RspackUpdateNotificationPlugin {
     
     const { hiddenDefaultNotification, versionType, indexHtmlFilePath, customVersion, silence } = this.options
     let version = ''
-    
-    // 生成版本号
-    version = getVersion(versionType, customVersion);
     
     if (versionType === 'custom')
       version = getVersion(versionType, customVersion!)
@@ -157,4 +154,4 @@ class RspackUpdateNotificationPlugin {
   }
 }
 
-export { RspackUpdateNotificationPlugin }
+export { WebUpdateNotificationPlugin }
